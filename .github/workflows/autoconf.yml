@@ -78,7 +78,11 @@ jobs:
         run: make -j
 
       - name: Run tests
-        run: make ${{matrix.check-target}} PARALLEL=16 APACHE_MPM=event
+        run: |
+          if ! make ${{matrix.check-target}} PARALLEL=16 APACHE_MPM=event; then
+            cat subversion/tests.log
+            false
+          fi
 
       - name: Install (make install)
         run: sudo make install
